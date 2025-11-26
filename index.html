@@ -3,187 +3,465 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desarrollador Full Stack | Web & Móvil</title>
+    <title>Mikropublisher | Desarrollo Web & Apps Futuristas</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js (Motor 3D) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Rajdhani', 'sans-serif'],
+                    },
                     colors: {
-                        primary: '#3b82f6', // Azul profesional
-                        dark: '#0f172a',    // Fondo oscuro
-                        card: '#1e293b'     // Fondo tarjetas
+                        primary: '#00f2ff',
+                        secondary: '#a855f7',
+                        accent: '#10b981',
+                        dark: '#050a14',
+                    },
+                    boxShadow: {
+                        'neon-primary': '0 0 10px #00f2ff, 0 0 30px rgba(0, 242, 255, 0.2)',
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Efecto sutil para el fondo */
-        .hero-bg {
-            background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        body {
+            background-color: #050a14;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Canvas 3D en el fondo */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.8; /* Sutil transparencia para no cansar la vista */
+        }
+
+        /* Efecto Cristal (Glassmorphism) mejorado para que se vea el 3D */
+        .glass-panel {
+            background: rgba(10, 17, 32, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 242, 255, 0.1);
+        }
+
+        /* Efecto Tilt 3D para tarjetas */
+        .tilt-card {
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .text-glow { text-shadow: 0 0 8px currentColor; }
+        
+        /* Scanlines para efecto pantalla antigua/futurista */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; w: 100%; h: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.3;
         }
     </style>
 </head>
-<body class="bg-dark text-gray-300 font-sans antialiased">
+<body class="antialiased relative selection:bg-primary selection:text-black">
 
-    <nav class="fixed w-full z-50 bg-dark/90 backdrop-blur-md border-b border-gray-800">
+    <!-- CONTENEDOR 3D -->
+    <div id="canvas-container"></div>
+    
+    <!-- EFECTO SCANLINES -->
+    <div class="scanlines h-full w-full fixed"></div>
+
+    <!-- NAV BAR -->
+    <nav class="fixed w-full z-40 glass-panel border-b border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0 font-bold text-2xl text-white">
-                    &lt;DevCode/&gt;
+                <div class="flex-shrink-0 font-mono font-bold text-2xl text-white tracking-wider text-glow text-primary cursor-pointer hover:scale-105 transition-transform">
+                    Mikropublisher
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#inicio" class="hover:text-primary transition px-3 py-2 rounded-md font-medium">Inicio</a>
-                        <a href="#servicios" class="hover:text-primary transition px-3 py-2 rounded-md font-medium">Servicios</a>
-                        <a href="#stack" class="hover:text-primary transition px-3 py-2 rounded-md font-medium">Tecnologías</a>
-                        <a href="#contacto" class="bg-primary text-white hover:bg-blue-600 px-4 py-2 rounded-md font-medium transition">Contáctame</a>
+                    <div class="ml-10 flex items-baseline space-x-8 font-mono tracking-widest uppercase text-sm">
+                        <a href="#inicio" class="hover:text-primary transition px-3 py-2 rounded-md hover:bg-white/5">Inicio</a>
+                        <a href="#servicios" class="hover:text-primary transition px-3 py-2 rounded-md hover:bg-white/5">Servicios</a>
+                        <a href="#stack" class="hover:text-primary transition px-3 py-2 rounded-md hover:bg-white/5">Tech</a>
+                        <a href="#contacto" class="border border-primary/50 text-primary px-4 py-2 rounded-md hover:bg-primary hover:text-black transition duration-300 shadow-neon-primary">
+                            Estado: Online
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <section id="inicio" class="hero-bg min-h-screen flex items-center justify-center pt-16">
-        <div class="text-center px-4 max-w-4xl mx-auto">
-            <span class="text-primary font-semibold tracking-wider uppercase mb-2 block">Desarrollador Full Stack</span>
-            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6">
-                Creo soluciones digitales <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">sin límites.</span>
-            </h1>
-            <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-                Especialista en desarrollo de aplicaciones nativas (iOS/Android), páginas web modernas y software a medida escalable.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#contacto" class="bg-primary hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105">
-                    Iniciar Proyecto
-                </a>
-                <a href="#servicios" class="border border-gray-600 hover:border-white text-white font-bold py-3 px-8 rounded-full transition">
-                    Ver Servicios
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section id="servicios" class="py-20 bg-dark">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Mis Servicios</h2>
-                <p class="text-gray-400">Soluciones integrales adaptadas a las necesidades de tu negocio.</p>
+    <!-- HERO SECTION -->
+    <section id="inicio" class="min-h-screen flex items-center justify-center pt-16 relative">
+        <div class="text-center px-4 max-w-5xl mx-auto relative z-10" id="hero-content">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-md">
+                <span class="font-mono text-primary font-bold tracking-[0.2em] text-sm uppercase animate-pulse">● Sistema Listo</span>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-card p-8 rounded-2xl hover:bg-gray-800 transition border border-gray-800 hover:border-primary group">
-                    <div class="w-14 h-14 bg-blue-900/30 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary transition">
-                        <i class="fa-solid fa-mobile-screen text-2xl text-blue-400 group-hover:text-white"></i>
+            <h1 class="text-6xl md:text-9xl font-bold text-white mb-6 font-mono tracking-tight leading-none mix-blend-overlay opacity-90">
+                FUTURO<br>DIGITAL
+            </h1>
+            
+            <!-- Subtítulo flotante 3D -->
+            <div class="tilt-card p-6 glass-panel rounded-xl max-w-2xl mx-auto mb-10 transform hover:scale-105 transition duration-500 border-l-4 border-primary">
+                <p class="text-xl md:text-2xl text-gray-300 font-light">
+                    Ingeniería de software avanzada y desarrollo móvil nativo en un entorno tridimensional.
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-6 justify-center font-mono uppercase tracking-wider">
+                <a href="#contacto" class="group relative px-8 py-4 bg-transparent overflow-hidden rounded-none border border-primary text-white font-bold transition-all hover:shadow-[0_0_20px_rgba(0,242,255,0.6)]">
+                    <span class="absolute top-0 left-0 w-full h-full bg-primary/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
+                    <span class="relative flex items-center">
+                        Iniciar Protocolo <i class="fa-solid fa-angle-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS CON EFECTO TILT -->
+    <section id="servicios" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-2 font-mono uppercase tracking-wider">
+                    Módulos de <span class="text-primary text-glow">Servicio</span>
+                </h2>
+                <div class="flex justify-center items-center gap-2 opacity-50">
+                    <div class="h-1 w-10 bg-primary"></div>
+                    <div class="h-1 w-2 bg-primary"></div>
+                    <div class="h-1 w-10 bg-primary"></div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 perspective-container">
+                <!-- Servicio 1 -->
+                <div class="tilt-card-js glass-panel p-8 rounded-xl relative group overflow-hidden cursor-pointer h-full">
+                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-crosshairs text-primary"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Apps Móviles (iOS/Android)</h3>
-                    <p class="text-gray-400">Desarrollo de aplicaciones nativas y multiplataforma optimizadas para rendimiento y experiencia de usuario.</p>
+                    <div class="w-16 h-16 rounded-full border border-primary/30 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(0,242,255,0.2)] bg-dark/50">
+                        <i class="fa-brands fa-android text-3xl text-primary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 font-mono">Desarrollo Móvil</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Arquitectura nativa para iOS y Android utilizando Swift y Kotlin. Optimización de rendimiento a nivel de kernel.</p>
+                    <div class="mt-6 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-primary w-0 group-hover:w-full transition-all duration-700"></div>
+                    </div>
                 </div>
 
-                <div class="bg-card p-8 rounded-2xl hover:bg-gray-800 transition border border-gray-800 hover:border-primary group">
-                    <div class="w-14 h-14 bg-purple-900/30 rounded-lg flex items-center justify-center mb-6 group-hover:bg-purple-600 transition">
-                        <i class="fa-solid fa-code text-2xl text-purple-400 group-hover:text-white"></i>
+                <!-- Servicio 2 -->
+                <div class="tilt-card-js glass-panel p-8 rounded-xl relative group overflow-hidden cursor-pointer h-full">
+                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-crosshairs text-secondary"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Desarrollo Web</h3>
-                    <p class="text-gray-400">Sitios corporativos, Landing Pages y E-commerce modernos, rápidos y responsivos.</p>
+                    <div class="w-16 h-16 rounded-full border border-secondary/30 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(168,85,247,0.2)] bg-dark/50">
+                        <i class="fa-solid fa-globe text-3xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 font-mono">Web Inmersiva</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Interfaces reactivas construidas con React y Three.js. Experiencias de usuario que rompen la barrera de la pantalla.</p>
+                    <div class="mt-6 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-secondary w-0 group-hover:w-full transition-all duration-700"></div>
+                    </div>
                 </div>
 
-                <div class="bg-card p-8 rounded-2xl hover:bg-gray-800 transition border border-gray-800 hover:border-primary group">
-                    <div class="w-14 h-14 bg-green-900/30 rounded-lg flex items-center justify-center mb-6 group-hover:bg-green-600 transition">
-                        <i class="fa-solid fa-server text-2xl text-green-400 group-hover:text-white"></i>
+                <!-- Servicio 3 -->
+                <div class="tilt-card-js glass-panel p-8 rounded-xl relative group overflow-hidden cursor-pointer h-full">
+                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-crosshairs text-accent"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Software a Medida</h3>
-                    <p class="text-gray-400">Sistemas de gestión, dashboards, integración de APIs y automatización de procesos.</p>
+                    <div class="w-16 h-16 rounded-full border border-accent/30 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(16,185,129,0.2)] bg-dark/50">
+                        <i class="fa-solid fa-code-branch text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 font-mono">Backend Logic</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Sistemas escalables, microservicios y bases de datos en tiempo real. La columna vertebral de tu infraestructura digital.</p>
+                    <div class="mt-6 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-accent w-0 group-hover:w-full transition-all duration-700"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="stack" class="py-16 bg-card border-y border-gray-800">
+    <!-- STACK -->
+    <section id="stack" class="py-20 relative z-10 border-y border-white/5 bg-black/20 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <h3 class="text-2xl font-bold text-white mb-8">Tecnologías que domino</h3>
-            <div class="flex flex-wrap justify-center gap-4">
-                <span class="px-4 py-2 bg-dark rounded-full border border-gray-700 text-gray-300 flex items-center gap-2">
-                    <i class="fa-brands fa-react text-blue-400"></i> React / Native
-                </span>
-                <span class="px-4 py-2 bg-dark rounded-full border border-gray-700 text-gray-300 flex items-center gap-2">
-                    <i class="fa-brands fa-android text-green-400"></i> Android / Kotlin
-                </span>
-                <span class="px-4 py-2 bg-dark rounded-full border border-gray-700 text-gray-300 flex items-center gap-2">
-                    <i class="fa-brands fa-apple text-gray-100"></i> iOS / Swift
-                </span>
-                <span class="px-4 py-2 bg-dark rounded-full border border-gray-700 text-gray-300 flex items-center gap-2">
-                    <i class="fa-brands fa-node text-green-500"></i> Node.js
-                </span>
-                <span class="px-4 py-2 bg-dark rounded-full border border-gray-700 text-gray-300 flex items-center gap-2">
-                    <i class="fa-brands fa-python text-yellow-400"></i> Python
-                </span>
-                <span class="px-4 py-2 bg-dark rounded-full border border-gray-700 text-gray-300 flex items-center gap-2">
-                    <i class="fa-solid fa-database text-blue-300"></i> SQL / NoSQL
-                </span>
+            <h3 class="text-xl font-mono text-gray-400 mb-10 tracking-[0.5em] uppercase">Tecnologías Dominadas</h3>
+            
+            <!-- Grid de Iconos Actualizada -->
+            <div class="flex flex-wrap justify-center gap-8 md:gap-12 opacity-90">
+                
+                <!-- Web Core -->
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-html5 text-5xl md:text-6xl text-orange-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(249,115,22,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">HTML5</span>
+                </div>
+                
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-css3-alt text-5xl md:text-6xl text-blue-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(59,130,246,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">CSS3</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-js text-5xl md:text-6xl text-yellow-400 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(250,204,21,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">JavaScript</span>
+                </div>
+
+                <!-- Mobile Frameworks & Native -->
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-flutter text-5xl md:text-6xl text-cyan-400 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Flutter</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-android text-5xl md:text-6xl text-green-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Kotlin</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-app-store-ios text-5xl md:text-6xl text-white transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">iOS/Swift</span>
+                </div>
+
+                <!-- Backend & Software -->
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-java text-5xl md:text-6xl text-red-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Java</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-3 group">
+                    <i class="fa-brands fa-python text-5xl md:text-6xl text-blue-300 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(147,197,253,0.4)]"></i>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Python</span>
+                </div>
+                
+                <!-- "Más" Indicator -->
+                <div class="flex flex-col items-center gap-3 group">
+                    <div class="w-14 h-14 md:w-16 md:h-16 rounded-full border border-purple-500/50 flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
+                        <i class="fa-solid fa-plus text-2xl text-purple-400"></i>
+                    </div>
+                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Y Más...</span>
+                </div>
+
             </div>
         </div>
     </section>
 
-    <section id="contacto" class="py-20 bg-dark">
+    <!-- CONTACTO -->
+    <section id="contacto" class="py-24 relative z-10">
         <div class="max-w-4xl mx-auto px-4 sm:px-6">
-            <div class="bg-card rounded-2xl p-8 md:p-12 shadow-2xl border border-gray-800">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-white mb-2">Hablemos de tu proyecto</h2>
-                    <p class="text-gray-400">¿Tienes una idea? Vamos a hacerla realidad.</p>
+            <div class="glass-panel rounded-lg p-1 border-t border-b border-primary/50 relative">
+                <!-- Esquinas decorativas -->
+                <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary -mt-1 -ml-1"></div>
+                <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary -mt-1 -mr-1"></div>
+                <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary -mb-1 -ml-1"></div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary -mb-1 -mr-1"></div>
+                
+                <div class="bg-dark/80 p-8 md:p-12 backdrop-blur-xl rounded-lg">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold text-white mb-2 font-mono uppercase">Canal Seguro</h2>
+                        <p class="text-primary text-sm font-mono tracking-widest animate-pulse">>>> ESPERANDO ENTRADA DE DATOS_</p>
+                    </div>
+
+                    <form class="space-y-6 font-mono">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,242,255,0.3)] transition-all placeholder-gray-600" placeholder="IDENTIFICADOR [NOMBRE]">
+                            <input type="email" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,242,255,0.3)] transition-all placeholder-gray-600" placeholder="ENLACE [EMAIL]">
+                        </div>
+                        <textarea rows="4" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,242,255,0.3)] transition-all placeholder-gray-600" placeholder="DATOS DE LA MISIÓN..."></textarea>
+                        
+                        <button type="submit" class="w-full bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-black font-bold py-4 transition-all duration-300 uppercase tracking-widest text-sm hover:shadow-[0_0_30px_rgba(0,242,255,0.4)]">
+                            Transmitir Mensaje
+                        </button>
+                    </form>
                 </div>
-
-                <form class="space-y-6">
-                    <div clase="cuadrícula grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <etiqueta clase="bloque texto-sm fuente-medio texto-gris-400 mb-2">Nombre</etiqueta>
-                            <entrada tipo="texto" clase="w-full bg-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition" placeholder="Tu nombre">
-                        </div>
-                        <div>
-                            <etiqueta clase="bloque texto-sm fuente-medio texto-gris-400 mb-2">Correo electrónico</etiqueta>
-                            <entrada tipo="correo electrónico" clase="w-full bg-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition" placeholder="tu@email.com">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <etiqueta clase="bloque texto-sm fuente-medio texto-gris-400 mb-2">Tipo de servicio</etiqueta>
-                        <seleccionar clase="w-full bg-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition">
-                            <opción>Desarrollo Web</opción>
-                            <opción>Aplicación Móvil</opción>
-                            <opción>Software a Medida</opción>
-                            <opción>Otro</opción>
-                        </seleccionar>
-                    </div>
-
-                    <div>
-                        <etiqueta clase="bloque texto-sm fuente-medio texto-gris-400 mb-2">Mensaje</etiqueta>
-                        <área de texto filas="4" clase="w-full bg-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition" placeholder="Cuéntame detalles sobre tu proyecto..."></textarea>
-                    </div>
-
-                    <botón tipo="enviar" clase="w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-lg transition text-lg shadow-lg shadow-blue-500/30">
- Enviar Mensaje <i clase="fa-solid fa-paper-plane ml-2"></i>
-                    </botón>
-                </forma>
             </div>
         </div>
-    </sección>
+    </section>
 
-    <pie clase="bg-oscuro py-8 borde-t borde-gris-800">
-        <div clase="centro de texto max-w-7xl mx-auto px-4">
-            <p clase="texto gris-500">© 2024 Tu Nombre / Agencia. Todos los derechos reservados.</p>
-            <div clase="flex justificar-centrar espacio-x-6 mt-4">
-                <a href="#" clase="text-gray-400 hover:text-white text-xl"><i clase="fa-brands fa-github"></i></a>
-                <a href="#" clase="text-gray-400 hover:text-white text-xl"><i clase="marcas fa fa-linkedin"></i></a>
-                <a href="#" clase="text-gray-400 hover:text-white text-xl"><i clase="fa-brands fa-instagram"></i></a>
-            </div>
-        </div>
-    </pie>
+    <footer class="glass-panel py-8 border-t border-white/10 relative z-10 text-center font-mono text-sm text-gray-500">
+        <p>SISTEMA VERSIÓN 3.0 // CODIFICADO POR MIKROPUBLISHER</p>
+    </footer>
 
-</cuerpo>
-    </html>
+    <!-- LOGICA JAVASCRIPT: THREE.JS Y EFECTOS -->
+    <script>
+        // -------------------------------------------------------------------
+        // 1. CONFIGURACIÓN THREE.JS (FONDO 3D)
+        // -------------------------------------------------------------------
+        const canvasContainer = document.getElementById('canvas-container');
+        
+        // Escena, Cámara y Renderizador
+        const scene = new THREE.Scene();
+        // Niebla para dar profundidad y ocultar bordes lejanos
+        scene.fog = new THREE.FogExp2(0x050a14, 0.002);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        canvasContainer.appendChild(renderer.domElement);
+
+        // --- OBJETOS 3D (HUD RINGS) ---
+        const rings = [];
+        
+        // Función para crear anillos de estilo "Tech"
+        function createRing(radius, tube, radialSegments, tubularSegments, color, speedX, speedY) {
+            const geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: color, 
+                wireframe: true, 
+                transparent: true, 
+                opacity: 0.3 
+            });
+            const ring = new THREE.Mesh(geometry, material);
+            
+            // Datos personalizados para animación
+            ring.userData = { speedX: speedX, speedY: speedY };
+            
+            scene.add(ring);
+            rings.push(ring);
+            return ring;
+        }
+
+        // Crear sistema de anillos (estilo Arc Reactor / HUD)
+        createRing(10, 0.1, 16, 100, 0x00f2ff, 0.002, 0.005); // Ring 1
+        createRing(14, 0.2, 16, 100, 0xa855f7, -0.003, 0.002); // Ring 2
+        createRing(18, 0.05, 16, 80, 0x00f2ff, 0.001, -0.001); // Ring 3
+        
+        // Un icosaedro central girando
+        const coreGeo = new THREE.IcosahedronGeometry(4, 1);
+        const coreMat = new THREE.MeshBasicMaterial({ 
+            color: 0xffffff, 
+            wireframe: true, 
+            transparent: true, 
+            opacity: 0.5 
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(core);
+
+        // Nube de partículas (estrellas/datos de fondo)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            // Distribución aleatoria en un espacio grande
+            posArray[i] = (Math.random() - 0.5) * 100;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.15,
+            color: 0x00f2ff,
+            transparent: true,
+            opacity: 0.8,
+        });
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+
+        // --- ANIMACIÓN LOOP ---
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        // Captura movimiento del mouse para efecto parallax
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.001;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.001;
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotación de anillos
+            rings.forEach(ring => {
+                ring.rotation.x += ring.userData.speedX;
+                ring.rotation.y += ring.userData.speedY;
+                // Efecto de pulso en opacidad
+                ring.material.opacity = 0.3 + Math.sin(elapsedTime * 2) * 0.1;
+            });
+
+            // Rotación del núcleo
+            core.rotation.y += 0.01;
+            core.rotation.x += 0.005;
+
+            // Movimiento suave de la cámara basado en mouse (Parallax 3D)
+            targetX = mouseX * 2;
+            targetY = mouseY * 2;
+            
+            // Movimiento fluido de partículas
+            particlesMesh.rotation.y = -elapsedTime * 0.05;
+            particlesMesh.rotation.x = mouseY * 0.5;
+
+            // Inercia de la cámara
+            camera.position.x += 0.05 * (targetX - camera.position.x);
+            camera.position.y += 0.05 * (-targetY - camera.position.y);
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Responsive: Ajustar canvas al redimensionar ventana
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // -------------------------------------------------------------------
+        // 2. EFECTO TILT PARA TARJETAS (VANILLA JS)
+        // -------------------------------------------------------------------
+        const cards = document.querySelectorAll('.tilt-card-js');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calcular rotación basada en la posición del mouse dentro de la tarjeta
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10; // Max 10 grados
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Resetear posición al salir
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+
+    </script>
+</body>
+</html>
