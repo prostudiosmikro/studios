@@ -11,7 +11,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Rajdhani:wght@400;500;600;700&family=La+Belle+Aurore&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -20,15 +20,18 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         mono: ['Rajdhani', 'sans-serif'],
+                        signature: ['"La Belle Aurore"', 'cursive'],
                     },
                     colors: {
                         primary: '#00f2ff',
                         secondary: '#a855f7',
                         accent: '#10b981',
                         dark: '#050a14',
+                        gold: '#ffd700',
                     },
                     boxShadow: {
                         'neon-primary': '0 0 10px #00f2ff, 0 0 30px rgba(0, 242, 255, 0.2)',
+                        'neon-gold': '0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.3)',
                     }
                 }
             }
@@ -49,15 +52,29 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.8; /* Sutil transparencia para no cansar la vista */
+            opacity: 0.8;
         }
 
-        /* Efecto Cristal (Glassmorphism) mejorado para que se vea el 3D */
+        /* Efecto Cristal (Glassmorphism) */
         .glass-panel {
             background: rgba(10, 17, 32, 0.4);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(0, 242, 255, 0.1);
+        }
+        
+        /* Estilo especial para certificados */
+        .cert-panel {
+            background: linear-gradient(135deg, rgba(10, 17, 32, 0.9) 0%, rgba(20, 30, 50, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .cert-border {
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            pointer-events: none;
         }
 
         /* Efecto Tilt 3D para tarjetas */
@@ -69,7 +86,7 @@
         
         .text-glow { text-shadow: 0 0 8px currentColor; }
         
-        /* Scanlines para efecto pantalla antigua/futurista */
+        /* Scanlines */
         .scanlines {
             position: fixed;
             top: 0; left: 0; w: 100%; h: 100%;
@@ -78,6 +95,17 @@
             pointer-events: none;
             z-index: 50;
             opacity: 0.3;
+        }
+        
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 4rem;
+            opacity: 0.05;
+            font-weight: bold;
+            pointer-events: none;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -100,8 +128,8 @@
                     <div class="ml-10 flex items-baseline space-x-8 font-mono tracking-widest uppercase text-sm">
                         <a href="#inicio" class="hover:text-primary transition px-3 py-2 rounded-md hover:bg-white/5">Inicio</a>
                         <a href="#servicios" class="hover:text-primary transition px-3 py-2 rounded-md hover:bg-white/5">Servicios</a>
-                        <a href="#stack" class="hover:text-primary transition px-3 py-2 rounded-md hover:bg-white/5">Tech</a>
                         <a href="#portafolio" class="hover:text-primary transition px-3 py-2 rounded-md hover:bg-white/5">Proyectos</a>
+                        <a href="#certificaciones" class="hover:text-gold transition px-3 py-2 rounded-md hover:bg-white/5">Certificados</a>
                         <a href="#contacto" class="border border-primary/50 text-primary px-4 py-2 rounded-md hover:bg-primary hover:text-black transition duration-300 shadow-neon-primary">
                             Estado: Online
                         </a>
@@ -130,17 +158,17 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-6 justify-center font-mono uppercase tracking-wider">
-                <a href="#contacto" class="group relative px-8 py-4 bg-transparent overflow-hidden rounded-none border border-primary text-white font-bold transition-all hover:shadow-[0_0_20px_rgba(0,242,255,0.6)]">
+                <a href="#portafolio" class="group relative px-8 py-4 bg-transparent overflow-hidden rounded-none border border-primary text-white font-bold transition-all hover:shadow-[0_0_20px_rgba(0,242,255,0.6)]">
                     <span class="absolute top-0 left-0 w-full h-full bg-primary/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
                     <span class="relative flex items-center">
-                        Iniciar Protocolo <i class="fa-solid fa-angle-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        Ver Archivos <i class="fa-solid fa-folder-open ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- SERVICIOS CON EFECTO TILT -->
+    <!-- SERVICIOS -->
     <section id="servicios" class="py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-20">
@@ -165,9 +193,6 @@
                     </div>
                     <h3 class="text-2xl font-bold text-white mb-4 font-mono">Desarrollo Móvil</h3>
                     <p class="text-gray-400 text-sm leading-relaxed">Arquitectura nativa para iOS y Android utilizando Swift y Kotlin. Optimización de rendimiento a nivel de kernel.</p>
-                    <div class="mt-6 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-primary w-0 group-hover:w-full transition-all duration-700"></div>
-                    </div>
                 </div>
 
                 <!-- Servicio 2 -->
@@ -180,9 +205,6 @@
                     </div>
                     <h3 class="text-2xl font-bold text-white mb-4 font-mono">Web Inmersiva</h3>
                     <p class="text-gray-400 text-sm leading-relaxed">Interfaces reactivas construidas con React y Three.js. Experiencias de usuario que rompen la barrera de la pantalla.</p>
-                    <div class="mt-6 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-secondary w-0 group-hover:w-full transition-all duration-700"></div>
-                    </div>
                 </div>
 
                 <!-- Servicio 3 -->
@@ -191,13 +213,10 @@
                         <i class="fa-solid fa-crosshairs text-accent"></i>
                     </div>
                     <div class="w-16 h-16 rounded-full border border-accent/30 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(16,185,129,0.2)] bg-dark/50">
-                        <i class="fa-solid fa-code-branch text-3xl text-accent"></i>
+                        <i class="fa-solid fa-database text-3xl text-accent"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-4 font-mono">Backend Logic</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Sistemas escalables, microservicios y bases de datos en tiempo real. La columna vertebral de tu infraestructura digital.</p>
-                    <div class="mt-6 h-1 w-full bg-gray-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-accent w-0 group-hover:w-full transition-all duration-700"></div>
-                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 font-mono">Bases de Datos & IA</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Diseño de bases de datos MySQL complejas e integración de algoritmos de Inteligencia Artificial.</p>
                 </div>
             </div>
         </div>
@@ -207,61 +226,13 @@
     <section id="stack" class="py-20 relative z-10 border-y border-white/5 bg-black/20 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h3 class="text-xl font-mono text-gray-400 mb-10 tracking-[0.5em] uppercase">Tecnologías Dominadas</h3>
-            
-            <!-- Grid de Iconos Actualizada -->
             <div class="flex flex-wrap justify-center gap-8 md:gap-12 opacity-90">
-                
-                <!-- Web Core -->
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-html5 text-5xl md:text-6xl text-orange-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(249,115,22,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">HTML5</span>
-                </div>
-                
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-css3-alt text-5xl md:text-6xl text-blue-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(59,130,246,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">CSS3</span>
-                </div>
-
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-js text-5xl md:text-6xl text-yellow-400 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(250,204,21,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">JavaScript</span>
-                </div>
-
-                <!-- Mobile Frameworks & Native -->
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-flutter text-5xl md:text-6xl text-cyan-400 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Flutter</span>
-                </div>
-
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-android text-5xl md:text-6xl text-green-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Kotlin</span>
-                </div>
-
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-app-store-ios text-5xl md:text-6xl text-white transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">iOS/Swift</span>
-                </div>
-
-                <!-- Backend & Software -->
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-java text-5xl md:text-6xl text-red-500 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Java</span>
-                </div>
-
-                <div class="flex flex-col items-center gap-3 group">
-                    <i class="fa-brands fa-python text-5xl md:text-6xl text-blue-300 transform group-hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(147,197,253,0.4)]"></i>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Python</span>
-                </div>
-                
-                <!-- "Más" Indicator -->
-                <div class="flex flex-col items-center gap-3 group">
-                    <div class="w-14 h-14 md:w-16 md:h-16 rounded-full border border-purple-500/50 flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                        <i class="fa-solid fa-plus text-2xl text-purple-400"></i>
-                    </div>
-                    <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6">Y Más...</span>
-                </div>
-
+                <i class="fa-brands fa-html5 text-5xl md:text-6xl text-orange-500 hover:scale-125 transition"></i>
+                <i class="fa-brands fa-css3-alt text-5xl md:text-6xl text-blue-500 hover:scale-125 transition"></i>
+                <i class="fa-brands fa-js text-5xl md:text-6xl text-yellow-400 hover:scale-125 transition"></i>
+                <i class="fa-brands fa-android text-5xl md:text-6xl text-green-500 hover:scale-125 transition"></i>
+                <i class="fa-solid fa-database text-5xl md:text-6xl text-blue-300 hover:scale-125 transition"></i>
+                <i class="fa-solid fa-brain text-5xl md:text-6xl text-purple-500 hover:scale-125 transition"></i>
             </div>
         </div>
     </section>
@@ -287,10 +258,12 @@
                     </div>
                     
                     <h3 class="text-2xl font-bold text-white mb-2 font-mono">Fundación Huellas Libres</h3>
-                    <p class="text-gray-400 text-sm mb-6 flex-grow">Plataforma digital para fundación, optimizada para visibilidad y gestión de recursos.</p>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">
+                        Colaborador oficial desde hace 2 años. Encargado de la renovación continua de la plataforma, optimización de UX y mantenimiento de sistemas para la gestión de donaciones y adopciones.
+                    </p>
                     
                     <a href="https://fundacionhuellaslibres.com" target="_blank" class="inline-flex items-center justify-center py-3 px-4 bg-accent/10 hover:bg-accent hover:text-black text-accent border border-accent/50 rounded transition-all duration-300 font-mono text-sm uppercase font-bold tracking-wider group-hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                        Visitar Enlace <i class="fa-solid fa-external-link-alt ml-2"></i>
+                        Ver Proyecto <i class="fa-solid fa-external-link-alt ml-2"></i>
                     </a>
                 </div>
 
@@ -299,15 +272,17 @@
                      <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all"></div>
                     
                     <div class="flex items-center justify-between mb-6">
-                        <i class="fa-solid fa-network-wired text-3xl text-primary"></i>
-                        <span class="text-xs font-mono border border-primary/50 text-primary px-2 py-1 rounded bg-primary/10">INFRAESTRUCTURA</span>
+                        <i class="fa-solid fa-box-open text-3xl text-primary"></i>
+                        <span class="text-xs font-mono border border-primary/50 text-primary px-2 py-1 rounded bg-primary/10">LOGÍSTICA</span>
                     </div>
                     
                     <h3 class="text-2xl font-bold text-white mb-2 font-mono">Davila DNS</h3>
-                    <p class="text-gray-400 text-sm mb-6 flex-grow">Soluciones tecnológicas y servicios de red. Desarrollo de portal corporativo de alto rendimiento.</p>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">
+                        Sistema avanzado para el rastreo de paquetes en tiempo real. Implementación de algoritmos de geolocalización y bases de datos para el seguimiento logístico preciso.
+                    </p>
                     
                     <a href="https://daviladns.com.mx" target="_blank" class="inline-flex items-center justify-center py-3 px-4 bg-primary/10 hover:bg-primary hover:text-black text-primary border border-primary/50 rounded transition-all duration-300 font-mono text-sm uppercase font-bold tracking-wider group-hover:shadow-[0_0_15px_rgba(0,242,255,0.4)]">
-                        Visitar Enlace <i class="fa-solid fa-external-link-alt ml-2"></i>
+                        Rastrear Paquete <i class="fa-solid fa-search-location ml-2"></i>
                     </a>
                 </div>
 
@@ -320,13 +295,121 @@
                         <span class="text-xs font-mono border border-secondary/50 text-secondary px-2 py-1 rounded bg-secondary/10">CONFIDENCIAL</span>
                     </div>
                     
-                    <h3 class="text-2xl font-bold text-white mb-2 font-mono">Desarrollos Privados</h3>
-                    <p class="text-gray-400 text-sm mb-6 flex-grow">Aplicaciones internas y sistemas de gestión (ERP/CRM) para clientes bajo acuerdos de confidencialidad.</p>
+                    <h3 class="text-2xl font-bold text-white mb-2 font-mono">Sistemas Internos</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">Aplicaciones ERP y CRM para gestión empresarial bajo acuerdos de confidencialidad.</p>
                     
                     <button disabled class="cursor-not-allowed opacity-70 inline-flex items-center justify-center py-3 px-4 bg-transparent border border-gray-600 text-gray-400 rounded transition-all duration-300 font-mono text-sm uppercase font-bold tracking-wider">
                         <i class="fa-solid fa-lock mr-2"></i> Acceso Restringido
                     </button>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CERTIFICACIONES (NUEVA SECCIÓN) -->
+    <section id="certificaciones" class="py-24 relative z-10 bg-dark/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-2 font-mono uppercase tracking-wider">
+                    Credenciales <span class="text-gold text-glow">Verificadas</span>
+                </h2>
+                <p class="text-gray-400 font-mono uppercase text-sm">Validación Biométrica Confirmada: Maiky Ramirez Ramirez</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <!-- Certificado IA -->
+                <div class="tilt-card-js cert-panel p-8 rounded shadow-2xl relative group hover:shadow-neon-primary transition-all duration-500">
+                    <div class="cert-border"></div>
+                    <div class="watermark">IA CERTIFIED</div>
+                    
+                    <!-- Header Certificado -->
+                    <div class="flex justify-between items-start mb-8 border-b border-white/20 pb-4 relative z-10">
+                        <div class="flex items-center gap-4">
+                            <i class="fa-solid fa-certificate text-4xl text-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]"></i>
+                            <div>
+                                <h3 class="text-xl font-bold text-white font-mono uppercase">Certificación de Competencia</h3>
+                                <p class="text-xs text-primary font-mono tracking-widest">INSTITUTO DE TECNOLOGÍA AVANZADA</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <i class="fa-solid fa-brain text-3xl text-primary/80"></i>
+                        </div>
+                    </div>
+
+                    <!-- Contenido Certificado -->
+                    <div class="text-center py-4 relative z-10">
+                        <p class="text-gray-400 font-mono text-sm mb-2">Se otorga el presente certificado a:</p>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white font-mono mb-4 text-glow">MAIKY RAMIREZ RAMIREZ</h2>
+                        <p class="text-gray-400 text-sm mb-6 max-w-md mx-auto">Por demostrar dominio avanzado en el desarrollo, implementación y ética de sistemas de</p>
+                        <div class="inline-block border border-primary text-primary px-6 py-2 rounded text-lg font-bold font-mono tracking-wider bg-primary/5 mb-8">
+                            INTELIGENCIA ARTIFICIAL
+                        </div>
+                    </div>
+
+                    <!-- Footer Certificado -->
+                    <div class="flex justify-between items-end mt-4 relative z-10">
+                        <div class="text-left">
+                            <p class="text-xs text-gray-500 font-mono mb-1">CÓDIGO DE VALIDACIÓN:</p>
+                            <p class="text-xs text-primary font-mono bg-black/50 px-2 py-1 rounded border border-primary/30">HASH: 7f8a9c2d1e-AI-2024</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-signature text-2xl text-white opacity-80 rotate-[-5deg]">Maiky Ramirez</div>
+                            <div class="h-px w-32 bg-white/30 mt-1"></div>
+                            <p class="text-[10px] text-gray-500 font-mono mt-1">FIRMA DEL TITULAR</p>
+                        </div>
+                        <div class="text-right">
+                            <i class="fa-solid fa-award text-4xl text-gold opacity-80"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certificado MySQL -->
+                <div class="tilt-card-js cert-panel p-8 rounded shadow-2xl relative group hover:shadow-neon-primary transition-all duration-500">
+                    <div class="cert-border" style="border-color: rgba(16, 185, 129, 0.3);"></div>
+                    <div class="watermark">SQL MASTER</div>
+                    
+                    <!-- Header Certificado -->
+                    <div class="flex justify-between items-start mb-8 border-b border-white/20 pb-4 relative z-10">
+                        <div class="flex items-center gap-4">
+                            <i class="fa-solid fa-certificate text-4xl text-accent drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]"></i>
+                            <div>
+                                <h3 class="text-xl font-bold text-white font-mono uppercase">Certificación Técnica</h3>
+                                <p class="text-xs text-accent font-mono tracking-widest">ARQUITECTURA DE DATOS</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <i class="fa-solid fa-server text-3xl text-accent/80"></i>
+                        </div>
+                    </div>
+
+                    <!-- Contenido Certificado -->
+                    <div class="text-center py-4 relative z-10">
+                        <p class="text-gray-400 font-mono text-sm mb-2">Se certifica oficialmente a:</p>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white font-mono mb-4 text-glow">MAIKY RAMIREZ RAMIREZ</h2>
+                        <p class="text-gray-400 text-sm mb-6 max-w-md mx-auto">Por la maestría en diseño, optimización y gestión segura de sistemas de</p>
+                        <div class="inline-block border border-accent text-accent px-6 py-2 rounded text-lg font-bold font-mono tracking-wider bg-accent/5 mb-8">
+                            BASES DE DATOS MYSQL
+                        </div>
+                    </div>
+
+                    <!-- Footer Certificado -->
+                    <div class="flex justify-between items-end mt-4 relative z-10">
+                        <div class="text-left">
+                            <p class="text-xs text-gray-500 font-mono mb-1">ID CREDENCIAL:</p>
+                            <p class="text-xs text-accent font-mono bg-black/50 px-2 py-1 rounded border border-accent/30">ID: DB-9942-SQL-MR</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-signature text-2xl text-white opacity-80 rotate-[-5deg]">Maiky Ramirez</div>
+                            <div class="h-px w-32 bg-white/30 mt-1"></div>
+                            <p class="text-[10px] text-gray-500 font-mono mt-1">FIRMA DEL TITULAR</p>
+                        </div>
+                        <div class="text-right">
+                            <i class="fa-solid fa-database text-4xl text-accent opacity-80"></i>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -341,30 +424,34 @@
                 <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary -mb-1 -ml-1"></div>
                 <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary -mb-1 -mr-1"></div>
                 
-                <div class="bg-dark/80 p-8 md:p-12 backdrop-blur-xl rounded-lg">
-                    <div class="text-center mb-10">
-                        <h2 class="text-3xl font-bold text-white mb-2 font-mono uppercase">Canal Seguro</h2>
-                        <p class="text-primary text-sm font-mono tracking-widest animate-pulse">>>> ESPERANDO ENTRADA DE DATOS_</p>
+                <div class="bg-dark/80 p-8 md:p-16 backdrop-blur-xl rounded-lg text-center flex flex-col items-center justify-center min-h-[400px]">
+                    <div class="text-center mb-12">
+                        <div class="inline-block p-4 rounded-full border border-green-500/30 bg-green-500/10 mb-6 shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                             <i class="fa-brands fa-whatsapp text-6xl text-green-500 animate-pulse"></i>
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-2 font-mono uppercase">Enlace Directo</h2>
+                        <p class="text-primary text-sm font-mono tracking-widest">>>> ESTABLECER CONEXIÓN CIFRADA_</p>
                     </div>
 
-                    <form class="space-y-6 font-mono">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <input type="text" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,242,255,0.3)] transition-all placeholder-gray-600" placeholder="IDENTIFICADOR [NOMBRE]">
-                            <input type="email" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,242,255,0.3)] transition-all placeholder-gray-600" placeholder="ENLACE [EMAIL]">
-                        </div>
-                        <textarea rows="4" class="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,242,255,0.3)] transition-all placeholder-gray-600" placeholder="DATOS DE LA MISIÓN..."></textarea>
-                        
-                        <button type="submit" class="w-full bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-black font-bold py-4 transition-all duration-300 uppercase tracking-widest text-sm hover:shadow-[0_0_30px_rgba(0,242,255,0.4)]">
-                            Transmitir Mensaje
-                        </button>
-                    </form>
+                    <a href="https://wa.me/522203403341" target="_blank" class="group relative overflow-hidden inline-flex items-center justify-center py-6 px-12 bg-green-500/10 border border-green-500 text-green-400 hover:bg-green-500 hover:text-black font-bold text-xl rounded transition-all duration-300 font-mono uppercase tracking-widest shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:shadow-[0_0_40px_rgba(34,197,94,0.6)] transform hover:scale-105">
+                         <span class="mr-4 text-3xl"><i class="fa-brands fa-whatsapp"></i></span>
+                         <span>Mandar Mensaje</span>
+                         <!-- Efecto de barrido -->
+                         <span class="absolute top-0 left-0 w-full h-full bg-green-400/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
+                    </a>
+                    
+                    <div class="mt-8 flex items-center justify-center gap-3 text-gray-400 font-mono text-sm border border-white/10 px-4 py-2 rounded bg-black/30">
+                        <i class="fa-solid fa-signal text-green-500 animate-pulse"></i>
+                        <span>FRECUENCIA: +52 220 340 3341</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <footer class="glass-panel py-8 border-t border-white/10 relative z-10 text-center font-mono text-sm text-gray-500">
-        <p>SISTEMA VERSIÓN 3.0 // CODIFICADO POR MIKROPUBLISHER</p>
+        <p>SISTEMA VERSIÓN 3.1 // CODIFICADO POR MIKROPUBLISHER</p>
+        <p class="text-xs mt-2 opacity-50">© Maiky Ramirez Ramirez - Todos los derechos reservados</p>
     </footer>
 
     <!-- LOGICA JAVASCRIPT: THREE.JS Y EFECTOS -->
