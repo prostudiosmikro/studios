@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROGRAMMIT - Tu Tienda de Streaming</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Poppins', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .glow { box-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .modal { backdrop-filter: blur(10px); }
+        .wallet-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-white">
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-play-circle text-3xl text-indigo-500"></i>
+                <span class="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">PROGRAMMIT</span>
+            </div>
+            <div class="hidden md:flex gap-8">
+                <a href="#inicio" class="hover:text-indigo-400 transition">Inicio</a>
+                <a href="#catalogo" class="hover:text-indigo-400 transition">Catálogo</a>
+                <a href="#planes" class="hover:text-indigo-400 transition">Planes</a>
+                <a href="#contacto" class="hover:text-indigo-400 transition">Contacto</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="openWallet()" class="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 rounded-full hover:opacity-90 transition">
+                    <i class="fas fa-wallet"></i>
+                    <span id="walletBalance">$0.00</span>
+                </button>
+                <button onclick="openCart()" class="relative">
+                    <i class="fas fa-shopping-cart text-xl hover:text-indigo-400 transition"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="pt-32 pb-20 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                Todo el <span class="bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">Streaming</span>
+                <br>en un solo lugar
+            </h1>
+            <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                Accede a las mejores plataformas de streaming al mejor precio. Recarga tu monedero y disfruta de entretenimiento sin límites.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#catalogo" class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 rounded-full text-lg font-semibold hover:opacity-90 transition pulse">
+                    <i class="fas fa-rocket mr-2"></i>Explorar Catálogo
+                </a>
+                <button onclick="openWallet()" class="border border-indigo-500 px-8 py-4 rounded-full text-lg font-semibold hover:bg-indigo-500/20 transition">
+                    <i class="fas fa-plus-circle mr-2"></i>Recargar Monedero
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-12 border-y border-white/10">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <p class="text-4xl font-bold text-indigo-400">50K+</p>
+                <p class="text-gray-400">Clientes Felices</p>
+            </div>
+            <div>
+                <p class="text-4xl font-bold text-purple-400">15+</p>
+                <p class="text-gray-400">Plataformas</p>
+            </div>
+            <div>
+                <p class="text-4xl font-bold text-pink-400">99%</p>
+                <p class="text-gray-400">Satisfacción</p>
+            </div>
+            <div>
+                <p class="text-4xl font-bold text-blue-400">24/7</p>
+                <p class="text-gray-400">Soporte</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catálogo -->
+    <section id="catalogo" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Nuestro Catálogo</h2>
+            <p class="text-gray-400 text-center mb-12">Elige tu plataforma favorita y comienza a disfrutar</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="catalogGrid">
+                <!-- Cards generadas por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Planes -->
+    <section id="planes" class="py-20 px-4 bg-black/20">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Paquetes Especiales</h2>
+            <p class="text-gray-400 text-center mb-12">Ahorra más con nuestros combos exclusivos</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-8 card-hover">
+                    <div class="text-center mb-6">
+                        <span class="bg-indigo-500/20 text-indigo-400 px-4 py-1 rounded-full text-sm">Básico</span>
+                        <h3 class="text-2xl font-bold mt-4">Pack Starter</h3>
+                        <p class="text-4xl font-bold mt-4">$19.99<span class="text-lg text-gray-400">/mes</span></p>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Netflix Básico</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Spotify Individual</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-times text-red-400"></i>Disney+</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-times text-red-400"></i>HBO Max</li>
+                    </ul>
+                    <button onclick="addPackToCart('Pack Starter', 19.99)" class="w-full bg-indigo-600 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition">
+                        Agregar al Carrito
+                    </button>
+                </div>
+                
+                <div class="bg-gradient-to-b from-indigo-600/20 to-purple-600/20 border-2 border-indigo-500 rounded-2xl p-8 card-hover relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-1 rounded-full text-sm font-semibold">
+                        MÁS POPULAR
+                    </div>
+                    <div class="text-center mb-6">
+                        <span class="bg-purple-500/20 text-purple-400 px-4 py-1 rounded-full text-sm">Premium</span>
+                        <h3 class="text-2xl font-bold mt-4">Pack Premium</h3>
+                        <p class="text-4xl font-bold mt-4">$39.99<span class="text-lg text-gray-400">/mes</span></p>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Netflix Premium</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Spotify Familiar</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Disney+ Bundle</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>HBO Max</li>
+                    </ul>
+                    <button onclick="addPackToCart('Pack Premium', 39.99)" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-3 rounded-xl font-semibold hover:opacity-90 transition glow">
+                        Agregar al Carrito
+                    </button>
+                </div>
+                
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-8 card-hover">
+                    <div class="text-center mb-6">
+                        <span class="bg-pink-500/20 text-pink-400 px-4 py-1 rounded-full text-sm">Ultimate</span>
+                        <h3 class="text-2xl font-bold mt-4">Pack Ultimate</h3>
+                        <p class="text-4xl font-bold mt-4">$59.99<span class="text-lg text-gray-400">/mes</span></p>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Todo en Premium</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Amazon Prime</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Apple TV+</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i>Paramount+</li>
+                    </ul>
+                    <button onclick="addPackToCart('Pack Ultimate', 59.99)" class="w-full bg-pink-600 py-3 rounded-xl font-semibold hover:bg-pink-700 transition">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-20 px-4">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">¿Tienes Dudas?</h2>
+            <p class="text-gray-400 text-center mb-12">Contáctanos y te responderemos en minutos</p>
+            
+            <form class="space-y-6 bg-white/5 p-8 rounded-2xl border border-white/10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" placeholder="Tu nombre" class="bg-white/10 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition">
+                    <input type="email" placeholder="Tu email" class="bg-white/10 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition">
+                </div>
+                <textarea rows="4" placeholder="Tu mensaje" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition"></textarea>
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-4 rounded-xl font-semibold hover:opacity-90 transition">
+                    <i class="fas fa-paper-plane mr-2"></i>Enviar Mensaje
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 border-t border-white/10">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <i class="fas fa-play-circle text-3xl text-indigo-500"></i>
+                <span class="text-2xl font-bold">PROGRAMMIT</span>
+            </div>
+            <p class="text-gray-400 mb-6">Tu destino para el mejor entretenimiento en streaming</p>
+            <div class="flex justify-center gap-6 mb-6">
+                <a href="#" class="text-2xl hover:text-indigo-400 transition"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-2xl hover:text-indigo-400 transition"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-2xl hover:text-indigo-400 transition"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-2xl hover:text-indigo-400 transition"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 PROGRAMMIT. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Monedero -->
+    <div id="walletModal" class="fixed inset-0 bg-black/70 modal hidden items-center justify-center z-50">
+        <div class="bg-slate-900 rounded-2xl p-8 max-w-md w-full mx-4 border border-white/10">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Mi Monedero</h3>
+                <button onclick="closeWallet()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="wallet-card rounded-2xl p-6 mb-6">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <p class="text-sm opacity-80">Saldo Disponible</p>
+                        <p class="text-3xl font-bold" id="modalBalance">$0.00</p>
+                    </div>
+                    <i class="fas fa-wallet text-3xl opacity-80"></i>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span>PROGRAMMIT Wallet</span>
+                    <span>**** 4589</span>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-sm text-gray-400 mb-3">Selecciona monto a recargar:</p>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="selectAmount(10)" class="amount-btn bg-white/10 py-3 rounded-xl hover:bg-indigo-600 transition">$10</button>
+                    <button onclick="selectAmount(25)" class="amount-btn bg-white/10 py-3 rounded-xl hover:bg-indigo-600 transition">$25</button>
+                    <button onclick="selectAmount(50)" class="amount-btn bg-white/10 py-3 rounded-xl hover:bg-indigo-600 transition">$50</button>
+                    <button onclick="selectAmount(100)" class="amount-btn bg-white/10 py-3 rounded-xl hover:bg-indigo-600 transition">$100</button>
+                    <button onclick="selectAmount(200)" class="amount-btn bg-white/10 py-3 rounded-xl hover:bg-indigo-600 transition">$200</button>
+                    <input type="number" id="customAmount" placeholder="Otro" class="bg-white/10 rounded-xl px-3 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-sm text-gray-400 mb-3">Método de pago:</p>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 bg-white/10 p-4 rounded-xl cursor-pointer hover:bg-white/15 transition">
+                        <input type="radio" name="payMethod" value="card" checked class="accent-indigo-500">
+                        <i class="fas fa-credit-card text-indigo-400"></i>
+                        <span>Tarjeta de Crédito/Débito</span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white/10 p-4 rounded-xl cursor-pointer hover:bg-white/15 transition">
+                        <input type="radio" name="payMethod" value="paypal" class="accent-indigo-500">
+                        <i class="fab fa-paypal text-blue-400"></i>
+                        <span>PayPal</span>
+                    </label>
+                    <label class="flex items-center gap-3 bg-white/10 p-4 rounded-xl cursor-pointer hover:bg-white/15 transition">
+                        <input type="radio" name="payMethod" value="crypto" class="accent-indigo-500">
+                        <i class="fab fa-bitcoin text-yellow-400"></i>
+                        <span>Criptomonedas</span>
+                    </label>
+                </div>
+            </div>
+            
+            <button onclick="rechargeWallet()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-4 rounded-xl font-semibold hover:opacity-90 transition">
+                <i class="fas fa-plus-circle mr-2"></i>Recargar Monedero
+            </button>
+            
+            <div class="mt-6 pt-6 border-t border-white/10">
+                <p class="text-sm text-gray-400 mb-3">Historial de Transacciones</p>
+                <div id="transactionHistory" class="space-y-2 max-h-40 overflow-y-auto">
+                    <p class="text-center text-gray-500 text-sm py-4">No hay transacciones</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Carrito -->
+    <div id="cartModal" class="fixed inset-0 bg-black/70 modal hidden items-center justify-center z-50">
+        <div class="bg-slate-900 rounded-2xl p-8 max-w-md w-full mx-4 border border-white/10 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold"><i class="fas fa-shopping-cart mr-2"></i>Mi Carrito</h3>
+                <button onclick="closeCart()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div id="cartItems" class="space-y-4 mb-6">
+                <p class="text-center text-gray-500 py-8">Tu carrito está vacío</p>
+            </div>
+            
+            <div class="border-t border-white/10 pt-4 mb-6">
+                <div class="flex justify-between text-lg font-semibold">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+                <div class="flex justify-between text-sm text-gray-400 mt-2">
+                    <span>Saldo en monedero:</span>
+                    <span id="cartWalletBalance">$0.00</span>
+                </div>
+            </div>
+            
+            <button onclick="checkout()" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 py-4 rounded-xl font-semibold hover:opacity-90 transition">
+                <i class="fas fa-lock mr-2"></i>Pagar con Monedero
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i class="fas fa-check-circle mr-2"></i><span id="toastMessage">Mensaje</span>
+    </div>
+
+    <script>
+        // Datos de streaming
+        const streamingServices = [
+            { id: 1, name: 'Netflix', price: 15.99, icon: 'fa-brands fa-netflix', color: 'from-red-600 to-red-900', desc: 'Películas y series ilimitadas', logo: 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/227_Netflix_logo-512.png' },
+            { id: 2, name: 'Spotify', price: 9.99, icon: 'fa-brands fa-spotify', color: 'from-green-500 to-green-700', desc: 'Música sin límites', logo: 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/315_Spotify_logo-512.png' },
+            { id: 3, name: 'Disney+', price: 12.99, icon: 'fa-solid fa-wand-magic-sparkles', color: 'from-blue-700 to-indigo-900', desc: 'La magia de Disney', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/disney-plus.png' },
+            { id: 4, name: 'HBO Max', price: 14.99, icon: 'fa-solid fa-clapperboard', color: 'from-purple-600 to-purple-900', desc: 'Contenido exclusivo HBO', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/hbo-max.png' },
+            { id: 5, name: 'Amazon Prime', price: 12.99, icon: 'fa-brands fa-amazon', color: 'from-sky-400 to-sky-700', desc: 'Video + envíos gratis', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/amazon-prime-video.png' },
+            { id: 6, name: 'Apple TV+', price: 9.99, icon: 'fa-brands fa-apple', color: 'from-gray-700 to-gray-900', desc: 'Originales de Apple', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/apple-tv.png' },
+            { id: 7, name: 'YouTube Premium', price: 11.99, icon: 'fa-brands fa-youtube', color: 'from-red-500 to-red-700', desc: 'Sin anuncios + Music', logo: 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/395_Youtube_logo-512.png' },
+            { id: 8, name: 'Paramount+', price: 9.99, icon: 'fa-solid fa-mountain-sun', color: 'from-blue-500 to-blue-800', desc: 'Películas y deportes', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/paramount-plus.png' },
+            { id: 9, name: 'Crunchyroll', price: 7.99, icon: 'fa-solid fa-dragon', color: 'from-orange-400 to-orange-600', desc: 'El mejor anime', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/crunchyroll.png' },
+            { id: 10, name: 'Twitch', price: 8.99, icon: 'fa-brands fa-twitch', color: 'from-purple-500 to-purple-800', desc: 'Streaming en vivo', logo: 'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/343_Twitch_logo-512.png' },
+            { id: 11, name: 'Deezer', price: 9.99, icon: 'fa-brands fa-deezer', color: 'from-pink-500 to-pink-700', desc: 'Música y podcasts', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/deezer.png' },
+            { id: 12, name: 'Tidal', price: 10.99, icon: 'fa-solid fa-water', color: 'from-black to-gray-800', desc: 'Audio Hi-Fi Premium', logo: 'https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/tidal.png' },
+        ];
+
+        // Estado de la aplicación
+        let wallet = { balance: 0, transactions: [] };
+        let cart = [];
+        let selectedRechargeAmount = 0;
+
+        // Cargar datos del localStorage
+        function loadData() {
+            const savedWallet = localStorage.getItem('programmit_wallet');
+            const savedCart = localStorage.getItem('programmit_cart');
+            if (savedWallet) wallet = JSON.parse(savedWallet);
+            if (savedCart) cart = JSON.parse(savedCart);
+            updateUI();
+        }
+
+        // Guardar datos
+        function saveData() {
+            localStorage.setItem('programmit_wallet', JSON.stringify(wallet));
+            localStorage.setItem('programmit_cart', JSON.stringify(cart));
+        }
+
+        // Actualizar UI
+        function updateUI() {
+            document.getElementById('walletBalance').textContent = `$${wallet.balance.toFixed(2)}`;
+            document.getElementById('modalBalance').textContent = `$${wallet.balance.toFixed(2)}`;
+            document.getElementById('cartWalletBalance').textContent = `$${wallet.balance.toFixed(2)}`;
+            document.getElementById('cartCount').textContent = cart.length;
+            updateCartTotal();
+            updateTransactionHistory();
+        }
+
+        // Renderizar catálogo
+        function renderCatalog() {
+            const grid = document.getElementById('catalogGrid');
+            grid.innerHTML = streamingServices.map(service => `
+                <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden card-hover group">
+                    <div class="bg-gradient-to-r ${service.color} p-8 text-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300"></div>
+                        <img src="${service.logo}" alt="${service.name}" class="w-20 h-20 mx-auto mb-4 object-contain drop-shadow-2xl relative z-10 group-hover:scale-110 transition-transform duration-300" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <i class="${service.icon} text-5xl mb-4 hidden relative z-10"></i>
+                        <h3 class="text-2xl font-bold relative z-10">${service.name}</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 mb-4">${service.desc}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold">${service.price.toFixed(2)}<span class="text-sm text-gray-400">/mes</span></span>
+                            <button onclick="addToCart(${service.id})" class="bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition flex items-center gap-2">
+                                <i class="fas fa-cart-plus"></i>
+                                <span class="hidden sm:inline">Agregar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Agregar al carrito
+        function addToCart(id) {
+            const service = streamingServices.find(s => s.id === id);
+            if (service && !cart.find(item => item.id === id)) {
+                cart.push({ ...service, type: 'service' });
+                saveData();
+                updateUI();
+                renderCartItems();
+                showToast(`${service.name} agregado al carrito`);
+            } else if (cart.find(item => item.id === id)) {
+                showToast('Este servicio ya está en el carrito', 'warning');
+            }
+        }
+
+        // Agregar pack al carrito
+        function addPackToCart(name, price) {
+            const packId = 'pack_' + name.replace(/\s/g, '_');
+            if (!cart.find(item => item.packId === packId)) {
+                cart.push({ packId, name, price, type: 'pack' });
+                saveData();
+                updateUI();
+                renderCartItems();
+                showToast(`${name} agregado al carrito`);
+            } else {
+                showToast('Este pack ya está en el carrito', 'warning');
+            }
+        }
+
+        // Renderizar items del carrito
+        function renderCartItems() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p class="text-center text-gray-500 py-8">Tu carrito está vacío</p>';
+                return;
+            }
+            cartItemsDiv.innerHTML = cart.map((item, index) => `
+                <div class="flex items-center justify-between bg-white/10 p-4 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        ${item.type === 'pack' 
+                            ? '<i class="fas fa-box-open text-2xl text-indigo-400"></i>' 
+                            : `<img src="${item.logo}" alt="${item.name}" class="w-10 h-10 object-contain" onerror="this.outerHTML='<i class=\\'${item.icon} text-2xl text-indigo-400\\'></i>'">`
+                        }
+                        <div>
+                            <p class="font-semibold">${item.name}</p>
+                            <p class="text-sm text-gray-400">${item.type === 'pack' ? 'Paquete' : 'Mensual'}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="font-semibold">${item.price.toFixed(2)}</span>
+                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Remover del carrito
+        function removeFromCart(index) {
+            const item = cart[index];
+            cart.splice(index, 1);
+            saveData();
+            updateUI();
+            renderCartItems();
+            showToast(`${item.name} eliminado del carrito`);
+        }
+
+        // Actualizar total del carrito
+        function updateCartTotal() {
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Modales
+        function openWallet() {
+            document.getElementById('walletModal').classList.remove('hidden');
+            document.getElementById('walletModal').classList.add('flex');
+        }
+
+        function closeWallet() {
+            document.getElementById('walletModal').classList.add('hidden');
+            document.getElementById('walletModal').classList.remove('flex');
+        }
+
+        function openCart() {
+            renderCartItems();
+            document.getElementById('cartModal').classList.remove('hidden');
+            document.getElementById('cartModal').classList.add('flex');
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').classList.add('hidden');
+            document.getElementById('cartModal').classList.remove('flex');
+        }
+
+        // Seleccionar monto de recarga
+        function selectAmount(amount) {
+            selectedRechargeAmount = amount;
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600');
+                btn.classList.add('bg-white/10');
+            });
+            event.target.classList.remove('bg-white/10');
+            event.target.classList.add('bg-indigo-600');
+            document.getElementById('customAmount').value = '';
+        }
+
+        // Recargar monedero
+        function rechargeWallet() {
+            const customAmount = parseFloat(document.getElementById('customAmount').value);
+            const amount = customAmount > 0 ? customAmount : selectedRechargeAmount;
+            
+            if (amount <= 0) {
+                showToast('Selecciona un monto válido', 'error');
+                return;
+            }
+
+            wallet.balance += amount;
+            wallet.transactions.unshift({
+                type: 'recharge',
+                amount: amount,
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString()
+            });
+            
+            saveData();
+            updateUI();
+            showToast(`Recarga de $${amount.toFixed(2)} exitosa!`);
+            
+            // Reset
+            selectedRechargeAmount = 0;
+            document.getElementById('customAmount').value = '';
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600');
+                btn.classList.add('bg-white/10');
+            });
+        }
+
+        // Actualizar historial de transacciones
+        function updateTransactionHistory() {
+            const historyDiv = document.getElementById('transactionHistory');
+            if (wallet.transactions.length === 0) {
+                historyDiv.innerHTML = '<p class="text-center text-gray-500 text-sm py-4">No hay transacciones</p>';
+                return;
+            }
+            historyDiv.innerHTML = wallet.transactions.slice(0, 10).map(t => `
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <i class="fas ${t.type === 'recharge' ? 'fa-arrow-down text-green-400' : 'fa-arrow-up text-red-400'}"></i>
+                        <div>
+                            <p class="text-sm">${t.type === 'recharge' ? 'Recarga' : 'Compra'}</p>
+                            <p class="text-xs text-gray-500">${t.date}</p>
+                        </div>
+                    </div>
+                    <span class="${t.type === 'recharge' ? 'text-green-400' : 'text-red-400'} font-semibold">
+                        ${t.type === 'recharge' ? '+' : '-'}$${t.amount.toFixed(2)}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        // Checkout
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Tu carrito está vacío', 'error');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            if (wallet.balance < total) {
+                showToast('Saldo insuficiente. Recarga tu monedero.', 'error');
+                closeCart();
+                openWallet();
+                return;
+            }
+
+            wallet.balance -= total;
+            wallet.transactions.unshift({
+                type: 'purchase',
+                amount: total,
+                items: cart.map(i => i.name).join(', '),
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString()
+            });
+
+            cart = [];
+            saveData();
+            updateUI();
+            renderCartItems();
+            closeCart();
+            showToast('¡Compra realizada con éxito! Revisa tu email.');
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `fixed bottom-4 right-4 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 z-50 ${
+                type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-yellow-600'
+            }`;
+            
+            toastMessage.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderCatalog();
+        });
+
+        // Cerrar modales al hacer clic fuera
+        document.getElementById('walletModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('walletModal')) closeWallet();
+        });
+        document.getElementById('cartModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('cartModal')) closeCart();
+        });
+    </script>
+</body>
+</html>
