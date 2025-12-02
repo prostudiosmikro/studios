@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos de Pago - BanCoppel</title>
+    <style>
+        :root {
+            --primary-color: #0056b3; /* Azul estilo corporativo */
+            --secondary-color: #f0f4f8;
+            --text-color: #333;
+            --success-color: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+        }
+
+        .bank-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        .data-group {
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .data-group:hover {
+            transform: translateY(-2px);
+        }
+
+        .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada para números */
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 600;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 86, 179, 0.1);
+        }
+
+        .footer {
+            padding: 20px;
+            font-size: 12px;
+            color: #888;
+            border-top: 1px solid #eee;
+        }
+
+        /* Animación para el mensaje de copiado */
+        .toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 10px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="header">
+            <h1>Datos Bancarios</h1>
+            <p>Para depósitos y transferencias</p>
+            <div class="bank-logo">BanCoppel</div>
+        </div>
+
+        <div class="content">
+            <div class="data-group">
+                <span class="label">CLABE Interbancaria</span>
+                <div class="number" id="clabe">137622105305105607</div>
+                <button class="copy-btn" onclick="copyToClipboard('clabe')">Copiar</button>
+            </div>
+
+            <div class="data-group">
+                <span class="label">Número de Cuenta</span>
+                <div class="number" id="cuenta">10530510560</div>
+                <button class="copy-btn" onclick="copyToClipboard('cuenta')">Copiar</button>
+            </div>
+
+            <div class="data-group">
+                <span class="label">Número de Tarjeta</span>
+                <div class="number" id="tarjeta">4169160611327298</div>
+                <button class="copy-btn" onclick="copyToClipboard('tarjeta')">Copiar</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            Gracias por tu pago. Por favor envía el comprobante.
+        </div>
+    </div>
+
+    <div id="toast" class="toast">¡Copiado al portapapeles!</div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            // Obtener el texto del elemento
+            var copyText = document.getElementById(elementId).innerText;
+
+            // Usar la API moderna de portapapeles
+            navigator.clipboard.writeText(copyText).then(function() {
+                showToast();
+            }, function(err) {
+                console.error('Error al copiar: ', err);
+                // Fallback para navegadores viejos si es necesario
+                alert("Copia manual: " + copyText);
+            });
+        }
+
+        function showToast() {
+            var x = document.getElementById("toast");
+            x.className = "toast show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+    </script>
+
+</body>
+</html>
