@@ -33,6 +33,7 @@
             <div class="hidden md:flex gap-8">
                 <a href="#inicio" class="hover:text-indigo-400 transition">Inicio</a>
                 <a href="#catalogo" class="hover:text-indigo-400 transition">Catálogo</a>
+                <a href="#combo-builder" class="hover:text-indigo-400 transition">Arma tu Combo</a>
                 <a href="#planes" class="hover:text-indigo-400 transition">Planes</a>
                 <a href="#contacto" class="hover:text-indigo-400 transition">Contacto</a>
             </div>
@@ -100,6 +101,102 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="catalogGrid">
                 <!-- Cards generadas por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Combo Builder -->
+    <section id="combo-builder" class="py-20 px-4 bg-gradient-to-b from-indigo-900/20 to-purple-900/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                    <i class="fas fa-magic mr-2"></i>NUEVO
+                </span>
+                <h2 class="text-4xl font-bold mt-4 mb-4">Arma tu Combo Personalizado</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Selecciona los servicios que quieras y obtén hasta <span class="text-green-400 font-bold">15% de descuento</span> al combinar 3 o más plataformas</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Selector de servicios -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-list-check text-indigo-400"></i>
+                            Selecciona tus servicios
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="comboServicesGrid">
+                            <!-- Servicios generados por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen del combo -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 sticky top-24">
+                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-receipt text-purple-400"></i>
+                            Tu Combo
+                        </h3>
+                        
+                        <div id="comboSelectedList" class="space-y-3 mb-6 max-h-60 overflow-y-auto">
+                            <p class="text-gray-500 text-center py-4">
+                                <i class="fas fa-hand-pointer text-2xl mb-2 block"></i>
+                                Selecciona servicios para armar tu combo
+                            </p>
+                        </div>
+
+                        <div class="border-t border-white/10 pt-4 space-y-3">
+                            <div class="flex justify-between text-gray-400">
+                                <span>Subtotal:</span>
+                                <span id="comboSubtotal">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-green-400" id="comboDiscountRow" style="display: none;">
+                                <span><i class="fas fa-tag mr-1"></i>Descuento (<span id="comboDiscountPercent">0</span>%):</span>
+                                <span id="comboDiscountAmount">-$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-xl font-bold pt-2 border-t border-white/10">
+                                <span>Total:</span>
+                                <span id="comboTotal">$0.00</span>
+                            </div>
+                            <div id="comboSavings" class="bg-green-500/20 text-green-400 text-center py-2 rounded-lg text-sm hidden">
+                                <i class="fas fa-piggy-bank mr-1"></i>¡Ahorras $<span id="comboSavingsAmount">0.00</span>/mes!
+                            </div>
+                        </div>
+
+                        <div class="mt-6 space-y-3">
+                            <input type="text" id="comboName" placeholder="Nombre de tu combo (opcional)" 
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition text-sm">
+                            
+                            <button onclick="addComboToCart()" id="addComboBtn" 
+                                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-4 rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <i class="fas fa-cart-plus mr-2"></i>Agregar Combo al Carrito
+                            </button>
+                            
+                            <button onclick="clearCombo()" class="w-full bg-white/10 py-3 rounded-xl font-semibold hover:bg-white/20 transition">
+                                <i class="fas fa-trash-alt mr-2"></i>Limpiar Selección
+                            </button>
+                        </div>
+
+                        <!-- Indicador de descuento -->
+                        <div class="mt-6 bg-white/5 rounded-xl p-4">
+                            <p class="text-sm text-gray-400 mb-3">Niveles de descuento:</p>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-3 h-3 rounded-full bg-gray-500" id="discountLevel1"></div>
+                                    <span class="text-gray-400">2 servicios: <span class="text-yellow-400">5% dto.</span></span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-3 h-3 rounded-full bg-gray-500" id="discountLevel2"></div>
+                                    <span class="text-gray-400">3 servicios: <span class="text-orange-400">10% dto.</span></span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="w-3 h-3 rounded-full bg-gray-500" id="discountLevel3"></div>
+                                    <span class="text-gray-400">4+ servicios: <span class="text-green-400">15% dto.</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -328,6 +425,7 @@
         let wallet = { balance: 0, transactions: [] };
         let cart = [];
         let selectedRechargeAmount = 0;
+        let comboSelected = [];
 
         // Cargar datos del localStorage
         function loadData() {
@@ -590,10 +688,254 @@
             }, 3000);
         }
 
+        // ==================== COMBO BUILDER ====================
+        
+        // Renderizar grid de servicios para combo
+        function renderComboServices() {
+            const grid = document.getElementById('comboServicesGrid');
+            grid.innerHTML = streamingServices.map(service => `
+                <div class="combo-service-card cursor-pointer p-4 rounded-xl border-2 transition-all duration-300 ${
+                    comboSelected.find(s => s.id === service.id) 
+                        ? 'border-indigo-500 bg-indigo-500/20' 
+                        : 'border-white/10 bg-white/5 hover:border-white/30'
+                }" onclick="toggleComboService(${service.id})">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <img src="${service.logo}" alt="${service.name}" class="w-12 h-12 object-contain" 
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-12 h-12 hidden items-center justify-center bg-gradient-to-r ${service.color} rounded-lg">
+                                <i class="${service.icon} text-xl"></i>
+                            </div>
+                            ${comboSelected.find(s => s.id === service.id) 
+                                ? '<div class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-check text-xs"></i></div>' 
+                                : ''
+                            }
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-semibold text-sm truncate">${service.name}</p>
+                            <p class="text-indigo-400 font-bold text-sm">${service.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle servicio en combo
+        function toggleComboService(id) {
+            const service = streamingServices.find(s => s.id === id);
+            const existingIndex = comboSelected.findIndex(s => s.id === id);
+            
+            if (existingIndex >= 0) {
+                comboSelected.splice(existingIndex, 1);
+            } else {
+                comboSelected.push(service);
+            }
+            
+            renderComboServices();
+            updateComboSummary();
+        }
+
+        // Calcular descuento del combo
+        function getComboDiscount(count) {
+            if (count >= 4) return 15;
+            if (count >= 3) return 10;
+            if (count >= 2) return 5;
+            return 0;
+        }
+
+        // Actualizar resumen del combo
+        function updateComboSummary() {
+            const listDiv = document.getElementById('comboSelectedList');
+            const count = comboSelected.length;
+            const subtotal = comboSelected.reduce((sum, s) => sum + s.price, 0);
+            const discountPercent = getComboDiscount(count);
+            const discountAmount = subtotal * (discountPercent / 100);
+            const total = subtotal - discountAmount;
+
+            // Actualizar lista de seleccionados
+            if (count === 0) {
+                listDiv.innerHTML = `
+                    <p class="text-gray-500 text-center py-4">
+                        <i class="fas fa-hand-pointer text-2xl mb-2 block"></i>
+                        Selecciona servicios para armar tu combo
+                    </p>
+                `;
+            } else {
+                listDiv.innerHTML = comboSelected.map(service => `
+                    <div class="flex items-center justify-between bg-white/10 p-3 rounded-lg">
+                        <div class="flex items-center gap-2">
+                            <img src="${service.logo}" alt="${service.name}" class="w-8 h-8 object-contain" 
+                                onerror="this.outerHTML='<i class=\\'${service.icon} text-lg text-indigo-400\\'></i>'">
+                            <span class="text-sm font-medium">${service.name}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm">${service.price.toFixed(2)}</span>
+                            <button onclick="event.stopPropagation(); toggleComboService(${service.id})" class="text-red-400 hover:text-red-300">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Actualizar precios
+            document.getElementById('comboSubtotal').textContent = `${subtotal.toFixed(2)}`;
+            document.getElementById('comboTotal').textContent = `${total.toFixed(2)}`;
+            
+            // Mostrar/ocultar descuento
+            const discountRow = document.getElementById('comboDiscountRow');
+            const savingsDiv = document.getElementById('comboSavings');
+            
+            if (discountPercent > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('comboDiscountPercent').textContent = discountPercent;
+                document.getElementById('comboDiscountAmount').textContent = `-${discountAmount.toFixed(2)}`;
+                
+                savingsDiv.classList.remove('hidden');
+                document.getElementById('comboSavingsAmount').textContent = discountAmount.toFixed(2);
+            } else {
+                discountRow.style.display = 'none';
+                savingsDiv.classList.add('hidden');
+            }
+
+            // Actualizar indicadores de nivel
+            document.getElementById('discountLevel1').className = `w-3 h-3 rounded-full ${count >= 2 ? 'bg-yellow-400' : 'bg-gray-500'}`;
+            document.getElementById('discountLevel2').className = `w-3 h-3 rounded-full ${count >= 3 ? 'bg-orange-400' : 'bg-gray-500'}`;
+            document.getElementById('discountLevel3').className = `w-3 h-3 rounded-full ${count >= 4 ? 'bg-green-400' : 'bg-gray-500'}`;
+
+            // Habilitar/deshabilitar botón
+            const addBtn = document.getElementById('addComboBtn');
+            addBtn.disabled = count < 2;
+        }
+
+        // Agregar combo al carrito
+        function addComboToCart() {
+            if (comboSelected.length < 2) {
+                showToast('Selecciona al menos 2 servicios para crear un combo', 'error');
+                return;
+            }
+
+            const customName = document.getElementById('comboName').value.trim();
+            const subtotal = comboSelected.reduce((sum, s) => sum + s.price, 0);
+            const discountPercent = getComboDiscount(comboSelected.length);
+            const discountAmount = subtotal * (discountPercent / 100);
+            const total = subtotal - discountAmount;
+            
+            const comboName = customName || `Mi Combo (${comboSelected.length} servicios)`;
+            const comboId = 'custom_combo_' + Date.now();
+            
+            const comboItem = {
+                comboId,
+                name: comboName,
+                price: total,
+                originalPrice: subtotal,
+                discount: discountPercent,
+                services: comboSelected.map(s => ({ id: s.id, name: s.name, logo: s.logo })),
+                type: 'custom_combo'
+            };
+
+            cart.push(comboItem);
+            saveData();
+            updateUI();
+            
+            showToast(`"${comboName}" agregado al carrito con ${discountPercent}% de descuento!`);
+            
+            // Limpiar combo
+            clearCombo();
+        }
+
+        // Limpiar selección del combo
+        function clearCombo() {
+            comboSelected = [];
+            document.getElementById('comboName').value = '';
+            renderComboServices();
+            updateComboSummary();
+        }
+
+        // Actualizar renderCartItems para mostrar combos personalizados
+        const originalRenderCartItems = renderCartItems;
+        renderCartItems = function() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p class="text-center text-gray-500 py-8">Tu carrito está vacío</p>';
+                return;
+            }
+            cartItemsDiv.innerHTML = cart.map((item, index) => {
+                if (item.type === 'custom_combo') {
+                    return `
+                        <div class="bg-gradient-to-r from-indigo-500/20 to-purple-500/20 p-4 rounded-xl border border-indigo-500/30">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-layer-group text-xl text-indigo-400"></i>
+                                    <div>
+                                        <p class="font-semibold">${item.name}</p>
+                                        <p class="text-xs text-green-400"><i class="fas fa-tag mr-1"></i>${item.discount}% descuento aplicado</p>
+                                    </div>
+                                </div>
+                                <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                ${item.services.map(s => `
+                                    <div class="bg-white/10 px-2 py-1 rounded-lg text-xs flex items-center gap-1">
+                                        <img src="${s.logo}" class="w-4 h-4 object-contain" onerror="this.style.display='none'">
+                                        ${s.name}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400 line-through">${item.originalPrice.toFixed(2)}</span>
+                                <span class="font-bold text-lg">${item.price.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (item.type === 'pack') {
+                    return `
+                        <div class="flex items-center justify-between bg-white/10 p-4 rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-box-open text-2xl text-indigo-400"></i>
+                                <div>
+                                    <p class="font-semibold">${item.name}</p>
+                                    <p class="text-sm text-gray-400">Paquete</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="font-semibold">${item.price.toFixed(2)}</span>
+                                <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="flex items-center justify-between bg-white/10 p-4 rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <img src="${item.logo}" alt="${item.name}" class="w-10 h-10 object-contain" onerror="this.outerHTML='<i class=\\'${item.icon} text-2xl text-indigo-400\\'></i>'">
+                                <div>
+                                    <p class="font-semibold">${item.name}</p>
+                                    <p class="text-sm text-gray-400">Mensual</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="font-semibold">${item.price.toFixed(2)}</span>
+                                <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        };
+
         // Inicializar
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             renderCatalog();
+            renderComboServices();
+            updateComboSummary();
         });
 
         // Cerrar modales al hacer clic fuera
